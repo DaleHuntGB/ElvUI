@@ -485,13 +485,13 @@ function E:CreateMoverPopup()
 	nudgeFrame:SetScript('OnKeyDown', function(_, btn)
 		local Mod = IsAltKeyDown() or IsControlKeyDown()
 		if btn == 'NUMPAD4' then
-			E:NudgeMover(-1 * (Mod and 10 or 0.1))
+			E:NudgeMover(-0.1 * (Mod and 10 or 1))
 		elseif btn == 'NUMPAD6' then
-			E:NudgeMover(1 * (Mod and 10 or 0.1))
+			E:NudgeMover(1 * (Mod and 10 or 1))
 		elseif btn == 'NUMPAD8' then
-			E:NudgeMover(nil, 1 * (Mod and 10 or 0.1))
+			E:NudgeMover(nil, 1 * (Mod and 10 or 1))
 		elseif btn == 'NUMPAD2' then
-			E:NudgeMover(nil, -1 * (Mod and 10 or 0.1))
+			E:NudgeMover(nil, -1 * (Mod and 10 or 1))
 		end
 	end)
 
