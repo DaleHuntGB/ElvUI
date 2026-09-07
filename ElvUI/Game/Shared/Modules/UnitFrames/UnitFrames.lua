@@ -2264,9 +2264,39 @@ do
 end
 
 function UF:UpdateAllElements(event)
-	if event == 'OnAttributeChanged' and E.Retail then
+	if event == 'OnAttributeChanged' then
 		UF:Configure_UnitAuras(self)
 	end
+end
+
+function UF:Auras_ToggleContainer(frame, shown)
+	E:Auras_ToggleEnable(frame.Auras, shown)
+	E:Auras_ToggleEnable(frame.Buffs, shown)
+	E:Auras_ToggleEnable(frame.Debuffs, shown)
+	E:Auras_ToggleEnable(frame.AuraBars, shown)
+	E:Auras_ToggleEnable(frame.AuraWatch, shown)
+
+	local highlight = frame.AuraHighlight
+	if highlight then
+		E:Auras_ToggleEnable(highlight.good, shown)
+		E:Auras_ToggleEnable(highlight.bad, shown)
+	end
+end
+
+function UF:Show()
+	if self.hasAurasShown then return end
+
+	self.hasAurasShown = true
+
+	UF:Auras_ToggleContainer(self, true)
+end
+
+function UF:Hide()
+	if not self.hasAurasShown then return end
+
+	self.hasAurasShown = false
+
+	UF:Auras_ToggleContainer(self, false)
 end
 
 function UF:AfterStyleCallback()
@@ -2282,6 +2312,18 @@ function UF:AfterStyleCallback()
 	elseif frameType == 'assist' or frameType == 'assisttarget' then
 		UF:Update_AssistFrames(self, UF.db.units.assist)
 		UF:Update_FontStrings()
+	end
+
+	-- these hooks below are used for aura container setup
+	-- only needed on retail and we dont need on nameplates
+	if not E.Retail or self.isNameplate then return end
+
+	if self.Show then
+		hooksecurefunc(self, 'Show', UF.Show)
+	end
+
+	if self.Hide then
+		hooksecurefunc(self, 'Hide', UF.Hide)
 	end
 
 	if self.UpdateAllElements then
